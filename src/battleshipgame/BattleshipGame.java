@@ -1,3 +1,5 @@
+/* Richard L Zarth III */
+
 package battleshipgame;
 
 import userInterface.BattleshipUI;
