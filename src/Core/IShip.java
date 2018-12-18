@@ -1,34 +1,30 @@
 package Core;
 
-public interface IShip {
+interface IShip {
 
-    public boolean isShipPlaced();
+    boolean isShipPlaced();
 
-    public void setShipLocation(int row, int column);
+    void setShipLocation(int row, int column);
 
-    public int getShipLength();
+    int getShipLength();
 
-    public void setShipLength(int inLength);
+    void setShipLength(int inLength);
 
-    public boolean isShipSunk();
+    boolean isShipSunk();
 
-    public String getShipName();
+    String getShipName();
 
-    public void setShipName(String inName);
+    void setShipName(String inName);
 
-    public int getHitsLeft();
+    void setMaxHits(int inHits);
 
-    public int getMaxHits();
+    int getShipDirection();
 
-    public void setMaxHits(int inHits);
+    void setShipDirection(int inDirection);
 
-    public int getShipDirection();
+    void setShipPlaced(boolean isShipPlaced);
 
-    public void setShipDirection(int inDirection);
+    int getShipStartRow();
 
-    public void setShipPlaced(boolean isShipPlaced);
-
-    public int getShipStartRow();
-
-    public int getShipStartCol();
+    int getShipStartCol();
 }

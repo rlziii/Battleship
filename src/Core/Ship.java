@@ -5,7 +5,6 @@ public class Ship implements IShip {
     private boolean shipPlaced;
     private boolean shipSunk;
     private int hitsLeft;
-    private int maxNumberOfHits;
     private int shipDirection;
     private int shipLength;
     private String shipName;
@@ -14,7 +13,7 @@ public class Ship implements IShip {
     private int shipStopRow;
     private int shipStopCol;
 
-    public Ship() {
+    Ship() {
         shipPlaced = false;
     }
     
@@ -45,7 +44,7 @@ public class Ship implements IShip {
         }
     }
 
-    public void setShipStopRow(int row) {
+    private void setShipStopRow(int row) {
         shipStopRow = row;
     }
 
@@ -53,7 +52,7 @@ public class Ship implements IShip {
         return shipStopRow;
     }
 
-    public void setShipStopCol(int col) {
+    private void setShipStopCol(int col) {
         shipStopCol = col;
     }
 
@@ -75,10 +74,6 @@ public class Ship implements IShip {
     public boolean isShipSunk() {
         return shipSunk;
     }
-    
-    private void setShipSunk(Boolean bool) {
-        shipSunk = bool;
-    }
 
     @Override
     public String getShipName() {
@@ -91,18 +86,7 @@ public class Ship implements IShip {
     }
 
     @Override
-    public int getHitsLeft() {
-        return hitsLeft;
-    }
-
-    @Override
-    public int getMaxHits() {
-        return maxNumberOfHits;
-    }
-
-    @Override
     public final void setMaxHits(int inHits) {
-        maxNumberOfHits = inHits;
         hitsLeft = inHits;
     }
 

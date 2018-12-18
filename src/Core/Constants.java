@@ -34,8 +34,7 @@ public class Constants {
     public static final int HUMAN = 0;
     public static final int COMPUTER = 1;
     
-    public static final int ROWS = 10;
-    public static final int COLS = 10;
+    public static final int BOARD_LENGTH = 10;
 
     public static final String START_GAME = "Battleship...START!\n";
     public static final String NEXT_TURN = ", your turn!";

@@ -21,23 +21,14 @@ public class Player {
     private final String userName;
     private Color shipColor;
     private boolean isFirst;
-    private int playMode;
-    
+
     private JButton[][] buttonBoard;
-    private final int boardRows = Constants.ROWS;
-    private final int boardCols = Constants.COLS;
 
     private int currentShip;
     private int currentShipLength;
     private int currentDirection;
-    
-    private Battleship battleship;
-    private Carrier carrier;
-    private Destroyer destroyer;
-    private PatrolBoat patrolBoat;
-    private Submarine submarine;
 
-    private ArrayList ships;
+    private ArrayList<Ship> ships;
 
     private final BattleshipUI parent;
 
@@ -53,11 +44,11 @@ public class Player {
     }
 
     private void initObjects() {
-        battleship = new Battleship();
-        carrier = new Carrier();
-        destroyer = new Destroyer();
-        patrolBoat = new PatrolBoat();
-        submarine = new Submarine();
+        Battleship battleship = new Battleship();
+        Carrier carrier = new Carrier();
+        Destroyer destroyer = new Destroyer();
+        PatrolBoat patrolBoat = new PatrolBoat();
+        Submarine submarine = new Submarine();
 
         ships = new ArrayList<>();
         ships.add(Constants.BATTLESHIP_INDEX, battleship);
@@ -114,8 +105,8 @@ public class Player {
         setShipColor(newColor);
         
         // Goes through the player's buttonBoard to update colors
-        for (int row = 0; row < getRows(); row++)
-            for (int col = 0; col < getCols(); col++)
+        for (int row = 0; row < getBoardLength(); row++)
+            for (int col = 0; col < getBoardLength(); col++)
                 if (getButtonBoard()[row][col].getBackground() == previousColor)
                     getButtonBoard()[row][col].setBackground(getShipColor());
     }
@@ -139,8 +130,8 @@ public class Player {
 
             // Try random values and see if they are valid ship placements
             do {
-                rowClick = random.nextInt(getRows());
-                colClick = random.nextInt(getCols());
+                rowClick = random.nextInt(getBoardLength());
+                colClick = random.nextInt(getBoardLength());
                 setCurrentDirection(random.nextInt(2));
 
                 if (isValid(rowClick, colClick) && !isOccupied(rowClick, colClick)) {
@@ -157,11 +148,11 @@ public class Player {
     }
 
     private void initComponents() {
-        buttonBoard = new JButton[getRows()][getCols()];
+        buttonBoard = new JButton[getBoardLength()][getBoardLength()];
 
         // Create the buttonBoard
-        for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getCols(); col++) {
+        for (int row = 0; row < getBoardLength(); row++) {
+            for (int col = 0; col < getBoardLength(); col++) {
                 buttonBoard[row][col] = new JButton();
                 getButtonBoard()[row][col].putClientProperty("row", row);
                 getButtonBoard()[row][col].putClientProperty("col", col);
@@ -172,7 +163,7 @@ public class Player {
         }
     }
 
-    public class BoardListener implements ActionListener {
+    class BoardListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() instanceof JButton) {
@@ -196,11 +187,9 @@ public class Player {
     private boolean isValid(int rowClick, int colClick) {
         // Checks to see if desired space is in the bounds of the board
         if (getCurrentDirection() == Constants.VERTICAL) {
-                if ((rowClick + getCurrentShipLength()) > getRows())
-                    return false;
+            return (rowClick + getCurrentShipLength()) <= getBoardLength();
         } else if (getCurrentDirection() == Constants.HORIZONTAL) {
-                if ((colClick + getCurrentShipLength()) > getCols())
-                    return false;
+            return (colClick + getCurrentShipLength()) <= getBoardLength();
         }
 
         // Otherwise, placement is valid
@@ -248,14 +237,14 @@ public class Player {
     private void isReadyToDeploy() {
         // If any ship isn't placed, returns from this method
         for (Ship ship : getShips())
-            if (ship.isShipPlaced() == false)
+            if (!ship.isShipPlaced())
                 return;
         
         // Otherwise, ships are ready to deploy
         parent.setDeployEnabled();
     }
 
-    public void removeShip(Ship ship) {
+    private void removeShip(Ship ship) {
         int startRow = ship.getShipStartRow();
         int startCol = ship.getShipStartCol();
         
@@ -276,55 +265,31 @@ public class Player {
         return ships;
     }
 
-    public Battleship getBattleship() {
-        return battleship;
-    }
-
-    public Carrier getCarrier() {
-        return carrier;
-    }
-
-    public Destroyer getDestroyer() {
-        return destroyer;
-    }
-
-    public PatrolBoat getPatrolBoat() {
-        return patrolBoat;
-    }
-
-    public Submarine getSubmarine() {
-        return submarine;
-    }
-
-    public JButton[][] getBoard() {
+    JButton[][] getBoard() {
         return buttonBoard;
     }
 
-    public int getRows() {
-        return boardRows;
-    }
-
-    public int getCols() {
-        return boardCols;
+    public int getBoardLength() {
+        return Constants.BOARD_LENGTH;
     }
 
     public boolean getIsFirst() {
         return isFirst;
     }
 
-    public Color getShipColor() {
+    Color getShipColor() {
         return shipColor;
     }
 
-    public int getCurrentShip() {
+    private int getCurrentShip() {
         return currentShip;
     }
 
-    public int getCurrentShipLength() {
+    private int getCurrentShipLength() {
         return currentShipLength;
     }
 
-    public int getCurrentDirection() {
+    private int getCurrentDirection() {
         return currentDirection;
     }
 
@@ -336,28 +301,20 @@ public class Player {
         this.isFirst = isFirst;
     }
 
-    public void setShipColor(Color shipColor) {
+    private void setShipColor(Color shipColor) {
         this.shipColor = shipColor;
     }
 
-    public void setCurrentShip(int currentShip) {
+    void setCurrentShip(int currentShip) {
         this.currentShip = currentShip;
     }
 
-    public void setCurrentShipLength(int currentShipLength) {
+    void setCurrentShipLength(int currentShipLength) {
         this.currentShipLength = currentShipLength;
     }
 
-    public void setCurrentDirection(int currentDirection) {
+    void setCurrentDirection(int currentDirection) {
         this.currentDirection = currentDirection;
-    }
-
-    public void setPlayMode(int playMode) {
-        this.playMode = playMode;
-    }
-
-    public int getPlayMode() {
-        return playMode;
     }
 
     public String getPlayerName() {

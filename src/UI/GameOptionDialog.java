@@ -16,26 +16,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GameOptionDialog {
-
+class GameOptionDialog {
     private JDialog dialog;
-    private JLabel computerAiLbl;
-    private JLabel shipLayoutLbl;
-    private JComboBox computerAi;
-    private JComboBox shipLayout;
-    private JButton saveBtn;
-    private JButton canxBtn;
-    private JPanel buttonPanel;
-    private JPanel optionsPanel;
-    private JPanel gameOptionPanel;
 
-    String[] level = Constants.LEVEL_ARRAY;
-    String[] layout = Constants.LAYOUT_ARRAY;
+    private final String[] level = Constants.LEVEL_ARRAY;
+    private final String[] layout = Constants.LAYOUT_ARRAY;
 
-    Player[] playerArray;
-
-    public GameOptionDialog(JFrame parent, Player[] inPlayers) {
-        playerArray = inPlayers;
+    GameOptionDialog(JFrame parent) {
         initComponents(parent);
     }
 
@@ -43,35 +30,35 @@ public class GameOptionDialog {
         dialog = new JDialog(parent, true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        optionsPanel = new JPanel();
+        JPanel optionsPanel = new JPanel();
         optionsPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        gameOptionPanel = new JPanel(new GridLayout(3, 2));
+        JPanel gameOptionPanel = new JPanel(new GridLayout(3, 2));
         gameOptionPanel.setBorder(BorderFactory.createTitledBorder("Game Options"));
         gameOptionPanel.setPreferredSize(new Dimension(275, 125));
 
-        computerAiLbl = new JLabel("Computer AI");
+        JLabel computerAiLbl = new JLabel("Computer AI");
         gameOptionPanel.add(computerAiLbl);
-        computerAi = new JComboBox(level);
+        JComboBox<String> computerAi = new JComboBox<>(level);
         computerAi.setSelectedIndex(0);
         gameOptionPanel.add(computerAi);
 
-        shipLayoutLbl = new JLabel("Ship Layout");
+        JLabel shipLayoutLbl = new JLabel("Ship Layout");
         gameOptionPanel.add(shipLayoutLbl);
-        shipLayout = new JComboBox(layout);
+        JComboBox<String> shipLayout = new JComboBox<>(layout);
         shipLayout.setSelectedIndex(0);
         gameOptionPanel.add(shipLayout);
 
         optionsPanel.add(gameOptionPanel);
 
-        saveBtn = new JButton("Save");
+        JButton saveBtn = new JButton("Save");
         saveBtn.addActionListener(new SaveListener());
-        canxBtn = new JButton("Cancel");
-        canxBtn.addActionListener(new CancelListener());
+        JButton cancelBtn = new JButton("Cancel");
+        cancelBtn.addActionListener(new CancelListener());
 
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         buttonPanel.add(saveBtn);
-        buttonPanel.add(canxBtn);
+        buttonPanel.add(cancelBtn);
 
         dialog.setTitle("Options");
         dialog.setLayout(new BorderLayout());
@@ -83,15 +70,12 @@ public class GameOptionDialog {
     }
 
     private class CancelListener implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
             dialog.dispose();
         }
-
     }
 
     private class SaveListener implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
             dialog.dispose();
         }

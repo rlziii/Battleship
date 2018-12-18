@@ -19,60 +19,38 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class BattleshipUI extends JFrame {
 
-    private static JMenuBar menuBar;
-
-    private static JMenu gameMenu;
-    private static JMenu optionMenu;
-
-    private static JMenuItem playerPlayer;
-    private static JMenuItem playerComputer;
-    private static JMenuItem computerComputer;
-    private static JMenuItem exit;
-    private static JMenuItem game;
-    private static JMenuItem player;
-
     private static JButton deploy;
 
-    private static JPanel shipLayoutPanel;
     private static JPanel playerOnePanel;
     private static JPanel playerTwoPanel;
     private static JPanel gameStatusPanel;
 
     public static JTextArea gameStatusTextArea;
-    private static JScrollPane gameStatusScrollPane;
 
-    private JComboBox shipCb;
-    private JComboBox directionCb;
+    private JComboBox<String> shipCb;
+    private JComboBox<String> directionCb;
 
     private static String[] rowLetters;
     private static String[] columnNumbers;
     private static String[] ships;
     private static String[] direction;
 
-    private GameListener gameListener;
-    private OptionsListener optionListener;
-
-    private static final int PLAYER_ONE = 0;
-    private static final int PLAYER_TWO = 1;
-
     private Player playerOne;
     private Player playerTwo;
     private Player[] players;
 
-    private Color[] color;
-    
     private BattleshipClient client;
 
-    public BattleshipUI() {
+    public void run() {
         initObjects();
         initArrays();
         initComponents();
@@ -83,8 +61,7 @@ public class BattleshipUI extends JFrame {
         columnNumbers = Constants.COL_NUMBERS_ARRAY;
         ships = Constants.SHIP_NAMES_ARRAY;
         direction = Constants.DIRECTION_NAMES_ARRAY;
-        color = Constants.COLOR_ARRAY;
-        
+
         players = new Player[]{playerOne, playerTwo};
     }
     
@@ -108,46 +85,46 @@ public class BattleshipUI extends JFrame {
             ex.printStackTrace();
         }
 
-        // Setup for JMenuBar tiems
-        menuBar = new JMenuBar();
-        gameMenu = new JMenu("Game");
+        // Setup for JMenuBar items
+        JMenuBar menuBar = new JMenuBar();
+        JMenu gameMenu = new JMenu("Game");
         gameMenu.setMnemonic('G');
-        optionMenu = new JMenu("Options");
+        JMenu optionMenu = new JMenu("Options");
         optionMenu.setMnemonic('O');
         menuBar.add(gameMenu);
         menuBar.add(optionMenu);
         this.setJMenuBar(menuBar);
 
         // Setup for gameMenu items
-        gameListener = new GameListener();
+        GameListener gameListener = new GameListener();
 
-        playerPlayer = new JMenuItem("Player vs. Player");
+        JMenuItem playerPlayer = new JMenuItem("Player vs. Player");
         playerPlayer.addActionListener(gameListener);
         playerPlayer.setEnabled(false);
         gameMenu.add(playerPlayer);
 
-        playerComputer = new JMenuItem("Player vs. Computer");
+        JMenuItem playerComputer = new JMenuItem("Player vs. Computer");
         playerComputer.addActionListener(gameListener);
         playerComputer.setSelected(true);
         gameMenu.add(playerComputer);
 
-        computerComputer = new JMenuItem("Computer vs. Computer");
+        JMenuItem computerComputer = new JMenuItem("Computer vs. Computer");
         computerComputer.addActionListener(gameListener);
         computerComputer.setEnabled(false);
         gameMenu.add(computerComputer);
 
-        exit = new JMenuItem("Exit");
+        JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ExitListener());
         gameMenu.add(exit);
 
         // Setup for optionMenu items
-        optionListener = new OptionsListener();
+        OptionsListener optionListener = new OptionsListener();
 
-        game = new JMenuItem("Game Options");
+        JMenuItem game = new JMenuItem("Game Options");
         game.addActionListener(optionListener);
         optionMenu.add(game);
 
-        player = new JMenuItem("Player Options");
+        JMenuItem player = new JMenuItem("Player Options");
         player.addActionListener(optionListener);
         optionMenu.add(player);
 
@@ -157,16 +134,16 @@ public class BattleshipUI extends JFrame {
         deploy.setEnabled(false);
 
         // Setup for Combo Boxes
-        shipCb = new JComboBox(ships);
+        shipCb = new JComboBox<>(ships);
         shipCb.addActionListener(new ShipListener());
         shipCb.setSelectedIndex(0);
 
-        directionCb = new JComboBox(direction);
+        directionCb = new JComboBox<>(direction);
         directionCb.addActionListener(new DirectionListener());
         directionCb.setSelectedIndex(0);
 
         // Setup for top Panel
-        shipLayoutPanel = new JPanel(new FlowLayout());
+        JPanel shipLayoutPanel = new JPanel(new FlowLayout());
         shipLayoutPanel.setBorder(BorderFactory.createTitledBorder("Select Ship and Direction"));
         shipLayoutPanel.add(shipCb);
         shipLayoutPanel.add(directionCb);
@@ -177,7 +154,7 @@ public class BattleshipUI extends JFrame {
         gameStatusTextArea = new JTextArea();
         gameStatusTextArea.setLineWrap(true);
         gameStatusTextArea.setEditable(false);
-        gameStatusScrollPane = new JScrollPane(gameStatusTextArea);
+        JScrollPane gameStatusScrollPane = new JScrollPane(gameStatusTextArea);
         gameStatusScrollPane.setPreferredSize(new Dimension(200, 350));
         gameStatusScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         gameStatusScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -190,21 +167,21 @@ public class BattleshipUI extends JFrame {
         this.setVisible(true);
     }
 
-    public void setDeployEnabled() {
+    void setDeployEnabled() {
         deploy.setEnabled(true);
     }
 
-    private void setShipLayoutPanelEnabled(Boolean bool) {
-        shipCb.setEnabled(bool);
-        directionCb.setEnabled(bool);
-        deploy.setEnabled(bool);
+    private void disableShipLayoutPanel() {
+        shipCb.setEnabled(false);
+        directionCb.setEnabled(false);
+        deploy.setEnabled(false);
     }
 
     private class DeployListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             // Disables the UI components on the JPanel with ship selection options
-            setShipLayoutPanelEnabled(false);
+            disableShipLayoutPanel();
 
             // Add a JPanel to the right of the Player One's button board with a
             // JTextArea for displaying the game status to the user
@@ -214,7 +191,7 @@ public class BattleshipUI extends JFrame {
             BattleshipUI.this.setVisible(true);
 
             // Call the play() method in class BattleshipClient
-            client = new BattleshipClient(players, BattleshipUI.this);
+            client = new BattleshipClient(players);
         }
     }
 
@@ -232,7 +209,7 @@ public class BattleshipUI extends JFrame {
     private class DirectionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            if (directionCb.getSelectedItem().equals("Horizontal")) {
+            if (Objects.requireNonNull(directionCb.getSelectedItem()).equals("Horizontal")) {
                 playerOne.setCurrentDirection(Constants.HORIZONTAL);
             } else if (directionCb.getSelectedItem().equals("Vertical")) {
                 playerOne.setCurrentDirection(Constants.VERTICAL);
@@ -243,8 +220,8 @@ public class BattleshipUI extends JFrame {
     private void setupPlayerBoard(Player player, JPanel playerPanel) {
         JButton[][] playerArray = player.getBoard();
 
-        for (int row = 0; row <= player.getRows(); row++) {
-            for (int col = 0; col <= player.getCols(); col++) {
+        for (int row = 0; row <= player.getBoardLength(); row++) {
+            for (int col = 0; col <= player.getBoardLength(); col++) {
                 if (row == 0) {
                     JLabel colLabel = new JLabel(columnNumbers[col], SwingConstants.CENTER);
                     colLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -291,16 +268,20 @@ public class BattleshipUI extends JFrame {
     private class GameListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("Player vs. Player")) {
-                players[Constants.PLAYER_ONE].setPlayMode(Constants.HUMAN);
-                players[Constants.PLAYER_TWO].setPlayMode(Constants.HUMAN);
-            } else if (e.getActionCommand().equals("Player vs. Computer")) {
-                players[Constants.PLAYER_ONE].setPlayMode(Constants.HUMAN);
-                players[Constants.PLAYER_TWO].setPlayMode(Constants.COMPUTER);
-            } else if (e.getActionCommand().equals("Computer vs. Computer")) {
-                players[Constants.PLAYER_ONE].setPlayMode(Constants.COMPUTER);
-                players[Constants.PLAYER_TWO].setPlayMode(Constants.COMPUTER);
-            }
+//            switch (e.getActionCommand()) {
+//                case "Player vs. Player":
+//                    players[Constants.PLAYER_ONE].setPlayMode(Constants.HUMAN);
+//                    players[Constants.PLAYER_TWO].setPlayMode(Constants.HUMAN);
+//                    break;
+//                case "Player vs. Computer":
+//                    players[Constants.PLAYER_ONE].setPlayMode(Constants.HUMAN);
+//                    players[Constants.PLAYER_TWO].setPlayMode(Constants.COMPUTER);
+//                    break;
+//                case "Computer vs. Computer":
+//                    players[Constants.PLAYER_ONE].setPlayMode(Constants.COMPUTER);
+//                    players[Constants.PLAYER_TWO].setPlayMode(Constants.COMPUTER);
+//                    break;
+//            }
         }
     }
 
@@ -311,18 +292,18 @@ public class BattleshipUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("Game Options")) {
-                gameOptions = new GameOptionDialog(getThisParent(), players);
+                gameOptions = new GameOptionDialog(getThisParent());
             } else if (e.getActionCommand().equals("Player Options")) {
                 playerOptions = new PlayerOptionDialog(getThisParent(), players);
             }
         }
     }
     
-    public BattleshipUI getThisParent() {
+    private BattleshipUI getThisParent() {
         return this;
     }
 
-    public BattleshipClient getClient() {
+    BattleshipClient getClient() {
         return client;
     }
 }

@@ -20,37 +20,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class PlayerOptionDialog {
+class PlayerOptionDialog {
 
     private JDialog dialog;
 
-    private JPanel playerOptionPanel;
-    private JPanel optionsPanel;
-    private JPanel buttonPanel;
-
-    private JLabel shipColorLbl;
-    private JLabel firstPlayerLbl;
-
-    private JComboBox shipColor;
-    private JComboBox firstPlayer;
-
-    private JButton saveBtn;
-    private JButton canxBtn;
+    private JComboBox<String> shipColor;
+    private JComboBox<String> firstPlayer;
 
     private JRadioButton player1;
-    private JRadioButton player2;
-    private ButtonGroup playerOptions; // for JRadioButtons
 
     private int colorIndex;
 
-    private static String[] colors = Constants.COLOR_NAME_ARRAY;
-    private static String[] players = {Constants.PLAYER_ONE_NAME, Constants.PLAYER_TWO_NAME, "Random"};
+    private static final String[] colors = Constants.COLOR_NAME_ARRAY;
+    private static final String[] players = {Constants.PLAYER_ONE_NAME, Constants.PLAYER_TWO_NAME, "Random"};
 
-    private Player currentPlayer;
+    private final Player[] playerArray;
 
-    private Player[] playerArray;
-
-    private static Color[] colorArray = Constants.COLOR_ARRAY;
+    private static final Color[] colorArray = Constants.COLOR_ARRAY;
 
     public PlayerOptionDialog(JFrame parent, Player[] inPlayers) {
         playerArray = inPlayers;
@@ -80,45 +66,46 @@ public class PlayerOptionDialog {
         dialog = new JDialog(parent, true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        optionsPanel = new JPanel();
+        JPanel optionsPanel = new JPanel();
         optionsPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        playerOptionPanel = new JPanel(new GridLayout(3, 2));
+        JPanel playerOptionPanel = new JPanel(new GridLayout(3, 2));
         playerOptionPanel.setBorder(BorderFactory.createTitledBorder("Player Options"));
         playerOptionPanel.setPreferredSize(new Dimension(275, 125));
 
-        playerOptions = new ButtonGroup();
+        // for JRadioButtons
+        ButtonGroup playerOptions = new ButtonGroup();
         player1 = new JRadioButton(Constants.PLAYER_ONE_NAME);
         player1.addActionListener(new PlayerListener());
-        player2 = new JRadioButton(Constants.PLAYER_TWO_NAME);
+        JRadioButton player2 = new JRadioButton(Constants.PLAYER_TWO_NAME);
         player2.addActionListener(new PlayerListener());
         playerOptions.add(player1);
         playerOptions.add(player2);
         playerOptionPanel.add(player1);
         playerOptionPanel.add(player2);
 
-        shipColorLbl = new JLabel("Ship Color");
+        JLabel shipColorLbl = new JLabel("Ship Color");
         playerOptionPanel.add(shipColorLbl);
-        shipColor = new JComboBox(colors);
+        shipColor = new JComboBox<>(colors);
         shipColor.setSelectedIndex(0);
         playerOptionPanel.add(shipColor);
 
-        firstPlayerLbl = new JLabel("Who Plays First?");
+        JLabel firstPlayerLbl = new JLabel("Who Plays First?");
         playerOptionPanel.add(firstPlayerLbl);
-        firstPlayer = new JComboBox(players);
+        firstPlayer = new JComboBox<>(players);
         firstPlayer.setSelectedIndex(0);
         playerOptionPanel.add(firstPlayer);
 
         optionsPanel.add(playerOptionPanel);
 
-        saveBtn = new JButton("Save");
+        JButton saveBtn = new JButton("Save");
         saveBtn.addActionListener(new SaveListener());
-        canxBtn = new JButton("Cancel");
-        canxBtn.addActionListener(new CancelListener());
+        JButton cancelBtn = new JButton("Cancel");
+        cancelBtn.addActionListener(new CancelListener());
 
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         buttonPanel.add(saveBtn);
-        buttonPanel.add(canxBtn);
+        buttonPanel.add(cancelBtn);
 
         dialog.setTitle("Options");
         dialog.setLayout(new BorderLayout());
@@ -150,7 +137,7 @@ public class PlayerOptionDialog {
             // Need to update the color of the ships already placed
             selectedPlayer.updateShipColor(selectedPlayer.getShipColor(), colorArray[shipColor.getSelectedIndex()]);
 
-            boolean isFirst = firstPlayer.getSelectedIndex() == 0 ? true : false;
+            boolean isFirst = firstPlayer.getSelectedIndex() == 0;
             playerArray[Constants.PLAYER_ONE].setIsFirst(isFirst);
             playerArray[Constants.PLAYER_TWO].setIsFirst(!isFirst);
 
@@ -172,8 +159,6 @@ public class PlayerOptionDialog {
             } else {
                 firstPlayer.setSelectedIndex(Constants.PLAYER_TWO);
             }
-
-            currentPlayer = playerArray[playerIndex];
         }
 
     }

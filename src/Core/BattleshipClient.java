@@ -12,16 +12,14 @@ import UI.Player;
 public class BattleshipClient {
 
     private final Player[] players;
-    private final BattleshipUI userInterface;
     private final Player playerOne;
     private final Player playerTwo;
     private final JButton[][] playerOneButtonBoard;
     private final JButton[][] playerTwoButtonBoard;
     private int currentPlayer;
 
-    public BattleshipClient(Player[] playerArray, BattleshipUI userInterface) {
+    public BattleshipClient(Player[] playerArray) {
         players = playerArray;
-        this.userInterface = userInterface;
         playerOne = players[Constants.PLAYER_ONE];
         playerTwo = players[Constants.PLAYER_TWO];
         playerOneButtonBoard = playerOne.getButtonBoard();
@@ -33,8 +31,8 @@ public class BattleshipClient {
     private void setupButtonListeners() {
         // This removes the ability to click to place ships on playerTwoButtonBoard
         // Then adds the ability to click playerTwoButtonBoard to attack playerTwo
-        for (int row = 0; row < playerTwo.getRows(); row++) {
-            for (int col = 0; col < playerTwo.getCols(); col++) {
+        for (int row = 0; row < playerTwo.getBoardLength(); row++) {
+            for (int col = 0; col < playerTwo.getBoardLength(); col++) {
                 playerTwoButtonBoard[row][col].removeActionListener(playerTwoButtonBoard[row][col].getActionListeners()[0]);
                 playerTwoButtonBoard[row][col].addActionListener(new ButtonListener());
             }
@@ -42,14 +40,14 @@ public class BattleshipClient {
 
         // This removes the ability to click to place ships on playerOneButtonBoard
         // To add a 'Player vs Player' mode, this needs to have a new ButtonListener() added
-        for (int row = 0; row < playerOne.getRows(); row++) {
-            for (int col = 0; col < playerOne.getCols(); col++) {
+        for (int row = 0; row < playerOne.getBoardLength(); row++) {
+            for (int col = 0; col < playerOne.getBoardLength(); col++) {
                 playerOneButtonBoard[row][col].removeActionListener(playerOneButtonBoard[row][col].getActionListeners()[0]);
             }
         }
     }
 
-    public class ButtonListener implements ActionListener {
+    class ButtonListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) e.getSource();
@@ -82,8 +80,8 @@ public class BattleshipClient {
     private void computerPick() {
         Random random = new Random();
 
-        int rowClick = random.nextInt(playerTwo.getRows());
-        int colClick = random.nextInt(playerTwo.getCols());
+        int rowClick = random.nextInt(playerTwo.getBoardLength());
+        int colClick = random.nextInt(playerTwo.getBoardLength());
 
         if (playerOneButtonBoard[rowClick][colClick].getBackground() == Color.red) {
             // Was already a hit; player loses turn for selecting twice
@@ -139,7 +137,7 @@ public class BattleshipClient {
                 JOptionPane.showMessageDialog(null, player.getPlayerName() + Constants.LOST_GAME, Constants.GAME_OVER, JOptionPane.ERROR_MESSAGE);
                 return true;
             } else {
-                // Reset this value to 0 for the next interation of the loop
+                // Reset this value to 0 for the next iteration of the loop
                 shipsSunk = 0;
             }
         }
@@ -150,8 +148,8 @@ public class BattleshipClient {
     private void endGame() {
         // Disables clicking on player 
         for (Player player : players) {
-            for (int row = 0; row < player.getRows(); row++) {
-                for (int col = 0; col < player.getCols(); col++) {
+            for (int row = 0; row < player.getBoardLength(); row++) {
+                for (int col = 0; col < player.getBoardLength(); col++) {
                     player.getButtonBoard()[row][col].setEnabled(false);
                 }
             }
@@ -172,7 +170,7 @@ public class BattleshipClient {
         // Sets up the button listeners for the HUMAN player
         setupButtonListeners();
         
-        // Sets up the ship layout for the COMPTER player
+        // Sets up the ship layout for the COMPUTER player
         playerTwo.autoLayout();
 
         // Sets up the first player
