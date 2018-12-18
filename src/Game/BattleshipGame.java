@@ -1,8 +1,8 @@
 /* Richard L Zarth III */
 
-package battleshipgame;
+package Game;
 
-import userInterface.BattleshipUI;
+import UI.BattleshipUI;
 
 public class BattleshipGame {
 

@@ -1,6 +1,6 @@
-package userInterface;
+package UI;
 
-import core.Constants;
+import Core.Constants;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

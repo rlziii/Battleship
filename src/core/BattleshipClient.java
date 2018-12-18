@@ -1,4 +1,4 @@
-package core;
+package Core;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import userInterface.BattleshipUI;
-import userInterface.Player;
+import UI.BattleshipUI;
+import UI.Player;
 
 public class BattleshipClient {
 

@@ -1,12 +1,12 @@
-package userInterface;
+package UI;
 
-import core.Battleship;
-import core.Carrier;
-import core.Constants;
-import core.Destroyer;
-import core.PatrolBoat;
-import core.Ship;
-import core.Submarine;
+import Core.Battleship;
+import Core.Carrier;
+import Core.Constants;
+import Core.Destroyer;
+import Core.PatrolBoat;
+import Core.Ship;
+import Core.Submarine;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

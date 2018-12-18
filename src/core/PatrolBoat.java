@@ -1,4 +1,4 @@
-package core;
+package Core;
 
 public class PatrolBoat extends Ship {
 

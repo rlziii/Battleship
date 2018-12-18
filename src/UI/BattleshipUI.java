@@ -1,8 +1,7 @@
-package userInterface;
+package UI;
 
-import battleshipgame.BattleshipGame;
-import core.Constants;
-import core.BattleshipClient;
+import Core.Constants;
+import Core.BattleshipClient;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
